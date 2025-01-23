@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+   <title>MiniClicker</title>
+</head>
+<style>
+   html {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+   }
+   .noshow {
+      display: none;
+   }
+</style>
+<body>
+   <h3>Welcome to mini clicker! <br> Click button for points</h3>
+   <p class="points">points: 0</p>
+   <button class="clicable" onclick="clicked()">clickable</button><br>
+   <button class="better noshow" onclick="better()" disabled>better clickable</button><br>
+   <button class="auto noshow" onclick="addAuto()" disabled>auto clicker (0)</button>
+   <br>
+   <p class="site noshow">Like the game? Check out <a href="https://hnasheralneam.dev">Hamza's site</a></p>
+</body>
+<script>
+   let points = 0;
+   let clicks = 1;
+   let autoClickers = 0;
+   let betterClickableCost = 50;
+   let autoClickerCost = 120;
+   let clickerLoop;
+   const pointsEl = document.querySelector(".points");
+   const clicableEl = document.querySelector(".clicable");
+   const betterEl = document.querySelector(".better");
+   const autoEl = document.querySelector(".auto");
+
+   checkShow();
+
+   function clicked() {
+      points += clicks;
+      checkShow();
+   }
+
+   function better() {
+      points -= betterClickableCost;
+      betterClickableCost += Math.floor(betterClickableCost * 0.35);
+      clicks++;
+      clicableEl.innerText = `clickable x` + clicks;
+      checkShow();
+   }
+
+   function addAuto() {
+      if (!clickerLoop) {
+         clickerLoop = setInterval(() => {
+            for (let i = 0; i < autoClickers; i++) {
+               clicked();
+            }
+         }, 1000);
+      }
+   
+      points -= autoClickerCost;
+      autoClickerCost += Math.floor(autoClickerCost * 0.35);
+      autoClickers++;
+      autoEl.innerText = "auto clicker (" + autoClickers + ")";
+      checkShow();
+   }
+ 
+   function checkShow() {
+      pointsEl.innerText = `points: ${points}`;
+
+      if (points > 20) {
+         betterEl.style.display = "inline-block";
+      }
+      if (points > 60) {
+         autoEl.style.display = "inline-block";
+      }
+      betterEl.title = "cost " + betterClickableCost;
+      autoEl.title = "cost " +  autoClickerCost;
+      if (points >= betterClickableCost) {
+         betterEl.disabled = false;
+      }
+      else {
+         betterEl.disabled = true;
+      }
+      if (points >= autoClickerCost) {
+         autoEl.disabled = false;
+      }
+      else {
+         autoEl.disabled = true;
+      }
+      if (autoClickers > 0) {
+         document.querySelector(".site").classList.remove("noshow");
+      }
+   }
+</script>
+</html>
